@@ -1,0 +1,15 @@
+{
+  "name": "grokbots-slack",
+  "private": true,
+  "type": "module",
+  "description": "Slack identities for the content crew so each agent speaks under its own name.",
+  "scripts": {
+    "test": "node --test",
+    "say": "node src/say.js",
+    "links": "node src/links.js",
+    "whoami": "node src/say.js --whoami",
+    "listen": "node src/listen.js",
+    "marketplace": "node src/marketplace.js",
+    "files": "node src/files.js"
+  }
+}
