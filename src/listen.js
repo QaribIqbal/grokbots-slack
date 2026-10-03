@@ -109,22 +109,30 @@ async function main() {
   const seen = loadSeen();
   const lockToken = process.env.SLACK_BOT_TOKEN_MAESTRO || process.env.SLACK_BOT_TOKEN;
 
-  const onEvent = async (event) => {
-    if (event.type && event.type !== "message" && event.type !== "app_mention") return;
-    const outcome = await handleIncoming(event, {
-      seen,
-      lock: lockToken
-        ? (decision) => addLock(lockToken, decision)
-        : undefined,
-      forget: lockToken ? (decision) => removeLock(lockToken, decision) : undefined,
-      post: (decision) => repostCrewMessage(decision, { slack: slackApi }),
-    });
-    if (outcome.action === "relayed") {
-      saveSeen(seen);
-      console.log(
-        `relayed ${outcome.roleKey} as app message ${outcome.ts} from ${outcome.sourceTs}`,
-      );
-    }
+  let chain = Promise.resolve();
+  const onEvent = (event) => {
+    chain = chain
+      .then(async () => {
+        if (event.type && event.type !== "message" && event.type !== "app_mention") return;
+        const outcome = await handleIncoming(event, {
+          seen,
+          lock: lockToken
+            ? (decision) => addLock(lockToken, decision)
+            : undefined,
+          forget: lockToken ? (decision) => removeLock(lockToken, decision) : undefined,
+          post: (decision) => repostCrewMessage(decision, { slack: slackApi }),
+        });
+        if (outcome.action === "relayed") {
+          saveSeen(seen);
+          console.log(
+            `relayed ${outcome.roleKey} as app message ${outcome.ts} from ${outcome.sourceTs}`,
+          );
+        }
+      })
+      .catch((error) => {
+        console.error(`event failed: ${error.message}`);
+      });
+    return chain;
   };
 
   let stopped = false;
