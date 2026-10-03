@@ -18,6 +18,16 @@ If `say.js` exits because no bot token is set, report that blocker. Do not send 
 
 `node src/listen.js` watches `#content` from a machine that has the bot tokens. When a message from Qarib still carries `Sent using Cursor` and a `— Role` signature, the listener posts that text again from the matching app, in the same thread. It does not delete the personal copy. Slack only lets an app delete its own messages. Sign the role on the last line (`— Scout`, and the same for the others) or the listener leaves the personal post alone.
 
+## Videos and other Slack files
+
+Do not download a video with the Slack file reader. It treats the MP4 as text, so the bytes come back corrupted and larger than the file Slack lists.
+
+```bash
+node src/files.js --role cutter --file F0C6GSCS8UA --out inbox/cutter-test.mp4
+```
+
+That uses the role's bot token, follows Slack's download redirect, and writes the original bytes. It fails if the size does not match Slack or the MP4 header is missing. `inbox/` is not committed.
+
 ## Marketplace bots
 
 Maestro looks up a Grok Bot marketplace agent with:

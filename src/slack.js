@@ -13,7 +13,10 @@ export async function slackApi(token, method, body) {
       data.error === "missing_scope" && body?.username
         ? " Add chat:write.customize to the app and reinstall it."
         : "";
-    throw new Error(`Slack ${method} failed: ${data.error}.${hint}`);
+    const detail = data.response_metadata?.messages?.filter(Boolean).join(" ");
+    throw new Error(
+      `Slack ${method} failed: ${data.error}${detail ? ` (${detail})` : ""}.${hint}`,
+    );
   }
   return data;
 }

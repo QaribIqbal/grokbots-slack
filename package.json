@@ -9,6 +9,7 @@
     "links": "node src/links.js",
     "whoami": "node src/say.js --whoami",
     "listen": "node src/listen.js",
-    "marketplace": "node src/marketplace.js"
+    "marketplace": "node src/marketplace.js",
+    "files": "node src/files.js"
   }
 }

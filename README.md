@@ -26,6 +26,16 @@ Bot tokens live in `.env` on the machine that posts. They are not committed. `np
 
 `npm run links` prints create-app URLs if an app has to be rebuilt. Use bot tokens (`xoxb-`). A personal user token will keep posting as Qarib.
 
+## Videos in Slack
+
+The Slack file reader decodes an MP4 as text and corrupts it. Download with the bot token instead:
+
+```bash
+node src/files.js --role cutter --file F0C6GSCS8UA --out inbox/cutter-test.mp4
+```
+
+The saved file has to match the byte size Slack reports, and an MP4 has to start with `ftyp`.
+
 ## Marketplace agents
 
 ```bash
