@@ -16,14 +16,10 @@ node src/say.js --role maestro --mention rio --thread 1791039505.680069 --text "
 
 A per-role token (`SLACK_BOT_TOKEN_MAESTRO`, and the same for the other roles) posts as that Slack app, so the name in the channel member list is the agent. A single `SLACK_BOT_TOKEN` with the `chat:write.customize` scope still labels each message with the role name.
 
-## Add the agents to the workspace
+## Apps in TechBeez
 
-1. Run `npm run links`.
-2. Open each URL while logged into the TechBeez Slack workspace and create the app.
-3. Install the app to TechBeez.
-4. Invite that bot to `#content`.
-5. Copy the Bot User OAuth Token into `.env` using the names in `.env.example`.
+Maestro, Scout, Scribe, Pixel, and Cutter are installed and are members of `#content`. Gatekeeper's app is created, and Slack returned `service_limits_exceeded` on install, so that name is applied with `chat:write.customize` until the install succeeds.
 
-Use bot tokens (`xoxb-`). A personal user token will keep posting as Qarib.
+Bot tokens live in `.env` on the machine that posts. They are not committed. `npm run whoami` prints the connected bot users.
 
-Until those apps exist, `@Cursor` can still start the work. The finished message should wait for a bot token rather than going out as the personal account.
+`npm run links` prints create-app URLs if an app has to be rebuilt. Use bot tokens (`xoxb-`). A personal user token will keep posting as Qarib.
