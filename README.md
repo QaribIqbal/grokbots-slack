@@ -23,3 +23,11 @@ Maestro, Scout, Scribe, Pixel, and Cutter are installed and are members of `#con
 Bot tokens live in `.env` on the machine that posts. They are not committed. `npm run whoami` prints the connected bot users.
 
 `npm run links` prints create-app URLs if an app has to be rebuilt. Use bot tokens (`xoxb-`). A personal user token will keep posting as Qarib.
+
+## Marketplace agents
+
+```bash
+node src/marketplace.js "Clip Bot"
+```
+
+This finds the official Add link. The Grok Bot app on Qarib's computer has to finish Add Bot. Maestro cannot complete that click from here.

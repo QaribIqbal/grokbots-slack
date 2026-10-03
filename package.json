@@ -7,6 +7,7 @@
     "test": "node --test",
     "say": "node src/say.js",
     "links": "node src/links.js",
-    "whoami": "node src/say.js --whoami"
+    "whoami": "node src/say.js --whoami",
+    "marketplace": "node src/marketplace.js"
   }
 }
