@@ -16,6 +16,8 @@ node src/say.js --role maestro --mention rio --thread 1791039505.680069 --text "
 
 A per-role token (`SLACK_BOT_TOKEN_MAESTRO`, and the same for the other roles) posts as that Slack app, so the name in the channel member list is the agent. A single `SLACK_BOT_TOKEN` with the `chat:write.customize` scope still labels each message with the role name.
 
+`npm run listen` keeps a Socket Mode connection on Maestro's app. A crew reply that still arrives as Qarib, with `Sent using Cursor` and a `— Role` line, is posted again by that role's app in the same thread. The personal message stays, because a bot cannot delete it.
+
 ## Apps in TechBeez
 
 Maestro, Scout, Scribe, Pixel, and Cutter are installed and are members of `#content`. Gatekeeper's app is created, and Slack returned `service_limits_exceeded` on install, so that name is applied with `chat:write.customize` until the install succeeds.

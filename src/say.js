@@ -1,23 +1,11 @@
 #!/usr/bin/env node
-import { existsSync, readFileSync } from "node:fs";
 import { parseArgs } from "node:util";
+import { loadEnv } from "./env.js";
 import { CONTENT_CHANNEL, ROLE_KEYS } from "./roles.js";
 import { buildPayload, resolveIdentity } from "./payload.js";
+import { slackApi } from "./slack.js";
 
-function loadEnvFile() {
-  const path = new URL("../.env", import.meta.url);
-  if (!existsSync(path)) return;
-  for (const line of readFileSync(path, "utf8").split("\n")) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#") || !trimmed.includes("=")) continue;
-    const index = trimmed.indexOf("=");
-    const key = trimmed.slice(0, index).trim();
-    const value = trimmed.slice(index + 1).trim();
-    if (key && process.env[key] === undefined) process.env[key] = value;
-  }
-}
-
-loadEnvFile();
+loadEnv();
 
 const { values } = parseArgs({
   options: {
@@ -33,26 +21,6 @@ const { values } = parseArgs({
   strict: true,
 });
 
-async function slack(token, method, body) {
-  const response = await fetch(`https://slack.com/api/${method}`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: JSON.stringify(body),
-  });
-  const data = await response.json();
-  if (!data.ok) {
-    const hint =
-      data.error === "missing_scope" && body.username
-        ? " Add chat:write.customize to the app and reinstall it."
-        : "";
-    throw new Error(`Slack ${method} failed: ${data.error}.${hint}`);
-  }
-  return data;
-}
-
 async function whoami() {
   const seen = new Set();
   const lines = [];
@@ -60,7 +28,7 @@ async function whoami() {
     const identity = resolveIdentity(roleKey);
     if (!identity.token || seen.has(identity.token)) continue;
     seen.add(identity.token);
-    const auth = await slack(identity.token, "auth.test", {});
+    const auth = await slackApi(identity.token, "auth.test", {});
     lines.push(
       `${identity.mode === "member" ? roleKey : "shared"}  ${auth.user} (${auth.user_id})  team ${auth.team}`,
     );
@@ -118,7 +86,7 @@ async function main() {
     return;
   }
 
-  const result = await slack(identity.token, "chat.postMessage", payload);
+  const result = await slackApi(identity.token, "chat.postMessage", payload);
   console.log(result.ts);
 }
 
